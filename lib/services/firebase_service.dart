@@ -40,6 +40,7 @@ class FirebaseService {
               prizes: value['prizes']?.toString() ?? '',
               fees: value['fees']?.toString() ?? '0',
               teamSize: value['teamSize']?.toString() ?? '',
+              imageAsset: value['imageAsset']?.toString() ?? '',
               category: category,
             );
 
@@ -96,6 +97,7 @@ class FirebaseService {
                   prizes: eventData['prizes']?.toString() ?? '',
                   fees: eventData['fees']?.toString() ?? '0',
                   teamSize: eventData['teamSize']?.toString() ?? '',
+                  imageAsset: eventData['imageAsset']?.toString() ?? '',
                   category: category.toString(),
                 );
 

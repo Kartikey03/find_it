@@ -13,6 +13,7 @@ class Event {
   final String prizes;
   final String fees;
   final String teamSize;
+  final String imageAsset;
   final String category;
 
   Event({
@@ -31,6 +32,7 @@ class Event {
     required this.fees,
     required this.teamSize,
     required this.category,
+    required this.imageAsset,
   });
 
   // Factory constructor to create an Event from a map
@@ -50,6 +52,7 @@ class Event {
       prizes: map['prizes']?.toString() ?? '',
       fees: map['fees']?.toString() ?? '0',
       teamSize: map['teamSize']?.toString() ?? '',
+      imageAsset: map['imageAsset']?.toString() ?? '',
       category: map['category']?.toString() ?? '',
     );
   }
@@ -70,6 +73,7 @@ class Event {
       'prizes': prizes,
       'fees': fees,
       'teamSize': teamSize,
+      'imageAsset': imageAsset,
       'category': category,
     };
   }

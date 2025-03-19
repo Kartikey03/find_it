@@ -18,16 +18,15 @@ class EventCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Event image
           AspectRatio(
-            aspectRatio: 16 / 9,
+            aspectRatio: 1.1,
             child: Image.asset(
-              'assets/images/kolaahal_banenr.png',
+              'assets/images/${event.title}.jpg',
               fit: BoxFit.cover,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -35,13 +34,14 @@ class EventCard extends StatelessWidget {
                 Text(
                   event.title,
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 20, // Increased font size for prominence
                     fontWeight: FontWeight.bold,
+                     // Added color to match the tech theme
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
 
-                // Event details
+                // Event details with more compact layout
                 Row(
                   children: [
                     const Icon(Icons.location_on, size: 16),
@@ -49,7 +49,7 @@ class EventCard extends StatelessWidget {
                     Expanded(child: Text(event.venue)),
                   ],
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 3),
 
                 Row(
                   children: [
@@ -58,7 +58,7 @@ class EventCard extends StatelessWidget {
                     Text(event.date),
                   ],
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 3),
 
                 Row(
                   children: [
@@ -68,22 +68,25 @@ class EventCard extends StatelessWidget {
                   ],
                 ),
 
-                // Show fees if available
-                ...[
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    const Icon(Icons.money, size: 16),
-                    const SizedBox(width: 4),
-                    Text('Fee: ${event.fees}'),
-                  ],
-                ),
-              ],
+                if (event.fees.isNotEmpty) ...[
+                  const SizedBox(height: 3),
+                  Row(
+                    children: [
+                      const Icon(Icons.money, size: 16),
+                      const SizedBox(width: 4),
+                      Text('Fee: ${event.fees}'),
+                    ],
+                  ),
+                ],
+
                 // View details button
-                const SizedBox(height: 12),
+                const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                    ),
                     onPressed: () {
                       // Navigate to event details page
                       Navigator.pushNamed(
@@ -92,7 +95,10 @@ class EventCard extends StatelessWidget {
                         arguments: {'event': event},
                       );
                     },
-                    child: const Text('View Details'),
+                    child: const Text(
+                      'View Details',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ],

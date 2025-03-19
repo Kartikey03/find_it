@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       // Define your routes here
       routes: {
         '/eventsList': (context) => const EventsListPage(),
-        '/eventDetails': (context) => const EventDetailsPage(),
+        '/eventDetails': (context) => EventDetailsPage(),
         // Add other routes as needed
       },
       // Set your home page here
