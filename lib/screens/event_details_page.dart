@@ -5,9 +5,7 @@ import '../models/event.dart';
 import '../models/maps.dart';
 
 class EventDetailsPage extends StatelessWidget {
-
-  final List<Maps> mapLinks =
-  [
+  final List<Maps> mapLinks = [
     Maps(
       name: 'Raman Block',
       link: 'https://mappls.com/6w1zhc',
@@ -45,7 +43,7 @@ class EventDetailsPage extends StatelessWidget {
       link: 'http://www.mappls.com/jrh1hb',
     ),
     Maps(
-      name: 'Adjacent to Vishveshwarya Block',
+      name: 'Adjacent to Vishveshwarya block',
       link: 'http://www.mappls.com/pzo36x',
     ),
     Maps(
@@ -69,6 +67,12 @@ class EventDetailsPage extends StatelessWidget {
     final Map args = ModalRoute.of(context)!.settings.arguments as Map;
     final Event event = args['event'];
 
+    // Get screen size
+    final Size screenSize = MediaQuery.of(context).size;
+    final bool isLargeScreen = screenSize.width > 600;
+    final double padding = screenSize.width > 600 ? 24.0 : 16.0;
+    final double imageHeight = isLargeScreen ? screenSize.height * 0.4 : screenSize.width;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(event.title),
@@ -80,83 +84,24 @@ class EventDetailsPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Event image
-                AspectRatio(
-                  aspectRatio: 1 / 1,
+                // Event image with responsive height
+                SizedBox(
+                  height: imageHeight,
+                  width: double.infinity,
                   child: Image.asset(
                     'assets/images/${event.title}.jpg',
                     fit: BoxFit.cover,
                   ),
                 ),
 
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Event title
-                      Text(
-                        event.title,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
+                // Responsive layout for event details
+                if (isLargeScreen)
+                  _buildLargeScreenLayout(context, event, padding)
+                else
+                  _buildSmallScreenLayout(context, event, padding),
 
-                      // Basic event info
-                      _buildInfoItem(Icons.location_on, 'Venue', event.venue),
-                      _buildInfoItem(Icons.calendar_today, 'Date', event.date),
-                      _buildInfoItem(Icons.access_time, 'Time', event.time),
-                      _buildInfoItem(Icons.money, 'Entry Fee', event.fees),
-                      _buildInfoItem(Icons.people, 'Team Size', event.teamSize),
-                      _buildInfoItem(Icons.emoji_events, 'Prizes', event.prizes),
-
-                      const Divider(height: 32),
-
-                      // Event description
-                      const Text(
-                        'Description',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(event.description),
-
-                      const SizedBox(height: 16),
-                      const Text(
-                        'Evaluation Criteria',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(event.evaluationScheme),
-
-                      const Divider(height: 32),
-
-                      // Contact information
-                      const Text(
-                        'Contact Information',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      _buildInfoItem(Icons.person, 'Event Coordinator', event.ec),
-                      _buildInfoItem(Icons.phone, 'EC Contact', event.ecContact),
-                      _buildInfoItem(Icons.person_outline, 'OC', event.oc),
-                      _buildInfoItem(Icons.phone_outlined, 'OC Contact', event.ocContact),
-
-                      // Add padding at the bottom to ensure content doesn't get hidden behind the fixed buttons
-                      const SizedBox(height: 80),
-                    ],
-                  ),
-                ),
+                // Add padding at the bottom to ensure content doesn't get hidden behind the fixed buttons
+                SizedBox(height: MediaQuery.of(context).padding.bottom + 80),
               ],
             ),
           ),
@@ -167,41 +112,221 @@ class EventDetailsPage extends StatelessWidget {
             right: 0,
             bottom: 0,
             child: Container(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.only(
+                  left: padding,
+                  right: padding,
+                  top: 16,
+                  bottom: 16 + MediaQuery.of(context).padding.bottom
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, -2),
+                  ),
+                ],
+              ),
               child: Row(
                 children: [
                   // Register button
                   Expanded(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: EdgeInsets.symmetric(vertical: isLargeScreen ? 20 : 16),
                       ),
                       onPressed: () {
                         _launchURL('https://kolaahal.vercel.app/events/${event.category.toLowerCase()}/${event.title}/');
                       },
-                      child: const Text('Register'),
+                      child: Text(
+                        'Register',
+                        style: TextStyle(
+                          fontSize: isLargeScreen ? 16 : 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
 
-                  const SizedBox(width: 12), // Space between buttons
+                  SizedBox(width: isLargeScreen ? 20 : 12), // Space between buttons
 
                   // Directions button
                   Expanded(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: EdgeInsets.symmetric(vertical: isLargeScreen ? 20 : 16),
                       ),
                       onPressed: () {
                         _launchMaps(event.venue);
                       },
-                      child: const Text('Directions'),
+                      child: Text(
+                        'Directions',
+                        style: TextStyle(
+                          fontSize: isLargeScreen ? 16 : 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  // Layout for large screens (tablets and desktops)
+  Widget _buildLargeScreenLayout(BuildContext context, Event event, double padding) {
+    return Padding(
+      padding: EdgeInsets.all(padding),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Left column - Basic info
+          Expanded(
+            flex: 1,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  event.title,
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                _buildInfoItem(Icons.location_on, 'Venue', event.venue),
+                _buildInfoItem(Icons.calendar_today, 'Date', event.date),
+                _buildInfoItem(Icons.access_time, 'Time', event.time),
+                _buildInfoItem(Icons.money, 'Entry Fee', event.fees),
+                _buildInfoItem(Icons.people, 'Team Size', event.teamSize),
+                _buildInfoItem(Icons.emoji_events, 'Prizes', event.prizes),
+                const SizedBox(height: 20),
+                const Text(
+                  'Contact Information',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                _buildInfoItem(Icons.person, 'Event Coordinator', event.ec),
+                _buildInfoItem(Icons.phone, 'EC Contact', event.ecContact),
+                _buildInfoItem(Icons.person_outline, 'OC', event.oc),
+                _buildInfoItem(Icons.phone_outlined, 'OC Contact', event.ocContact),
+              ],
+            ),
+          ),
+
+          const SizedBox(width: 32),
+
+          // Right column - Description and evaluation
+          Expanded(
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Description',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  event.description,
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(height: 24),
+                const Text(
+                  'Evaluation Criteria',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  event.evaluationScheme,
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Layout for small screens (phones)
+  Widget _buildSmallScreenLayout(BuildContext context, Event event, double padding) {
+    return Padding(
+      padding: EdgeInsets.all(padding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Event title
+          Text(
+            event.title,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Basic event info
+          _buildInfoItem(Icons.location_on, 'Venue', event.venue),
+          _buildInfoItem(Icons.calendar_today, 'Date', event.date),
+          _buildInfoItem(Icons.access_time, 'Time', event.time),
+          _buildInfoItem(Icons.money, 'Entry Fee', event.fees),
+          _buildInfoItem(Icons.people, 'Team Size', event.teamSize),
+          _buildInfoItem(Icons.emoji_events, 'Prizes', event.prizes),
+
+          const Divider(height: 32),
+
+          // Event description
+          const Text(
+            'Description',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(event.description),
+
+          const SizedBox(height: 16),
+          const Text(
+            'Evaluation Criteria',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(event.evaluationScheme),
+
+          const Divider(height: 32),
+
+          // Contact information
+          const Text(
+            'Contact Information',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          _buildInfoItem(Icons.person, 'Event Coordinator', event.ec),
+          _buildInfoItem(Icons.phone, 'EC Contact', event.ecContact),
+          _buildInfoItem(Icons.person_outline, 'OC', event.oc),
+          _buildInfoItem(Icons.phone_outlined, 'OC Contact', event.ocContact),
         ],
       ),
     );
@@ -266,7 +391,6 @@ class EventDetailsPage extends StatelessWidget {
 
     // If still no match, use a default map link
     if (mapUrl.isEmpty) {
-      // Use a default map - you can decide which one
       mapUrl = 'https://mappls.com/85pwur'; // College Campus as default
     }
 
