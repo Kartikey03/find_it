@@ -36,8 +36,9 @@ class EventCard extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 20, // Increased font size for prominence
                     fontWeight: FontWeight.bold,
-                     // Added color to match the tech theme
+                    // Added color to match the tech theme
                   ),
+                  overflow: TextOverflow.ellipsis, // Add this to prevent title overflow
                 ),
                 const SizedBox(height: 6),
 
@@ -46,7 +47,12 @@ class EventCard extends StatelessWidget {
                   children: [
                     const Icon(Icons.location_on, size: 16),
                     const SizedBox(width: 4),
-                    Expanded(child: Text(event.venue)),
+                    Expanded(
+                      child: Text(
+                        event.venue,
+                        overflow: TextOverflow.ellipsis, // Add this to venue text
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 3),
@@ -55,7 +61,12 @@ class EventCard extends StatelessWidget {
                   children: [
                     const Icon(Icons.calendar_today, size: 16),
                     const SizedBox(width: 4),
-                    Text(event.date),
+                    Expanded( // Add Expanded here
+                      child: Text(
+                        event.date,
+                        overflow: TextOverflow.ellipsis, // Add this to date text
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 3),
@@ -64,7 +75,12 @@ class EventCard extends StatelessWidget {
                   children: [
                     const Icon(Icons.access_time, size: 16),
                     const SizedBox(width: 4),
-                    Text(event.time),
+                    Expanded( // Add Expanded here to ensure time has a constrained width
+                      child: Text(
+                        event.time,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ],
                 ),
 
@@ -74,7 +90,12 @@ class EventCard extends StatelessWidget {
                     children: [
                       const Icon(Icons.money, size: 16),
                       const SizedBox(width: 4),
-                      Text('Fee: ${event.fees}'),
+                      Expanded( // Add Expanded here too
+                        child: Text(
+                          'Fee: ${event.fees}',
+                          overflow: TextOverflow.ellipsis, // Add this to fees text
+                        ),
+                      ),
                     ],
                   ),
                 ],

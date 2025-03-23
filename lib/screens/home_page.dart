@@ -6,7 +6,6 @@ import '../models/event.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     // Get device dimensions for responsive design
@@ -18,32 +17,13 @@ class HomePage extends StatelessWidget {
     // Theme colors for consistent styling
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
-    final List<Category> categories = [
-      Category(
-        name: 'Cultural',
-        description: 'Dance, music, drama and other cultural events',
-        icon: Icons.music_note,
-        color: Colors.purple.shade600,
-      ),
-      Category(
-        name: 'Technical',
-        description: 'Coding, robotics, and other technical events',
-        icon: Icons.code,
-        color: Colors.blue.shade600,
-      ),
-      Category(
-        name: 'Management',
-        description: 'Case studies, business plans and management events',
-        icon: Icons.business,
-        color: Colors.orange.shade600,
-      ),
-      Category(
-        name: 'Creativity',
-        description: 'Art, photography, and other creative events',
-        icon: Icons.brush,
-        color: Colors.green.shade600,
-      ),
-    ];
+    // Only keep the Cultural category
+    final Category culturalCategory = Category(
+      name: 'Cultural',
+      description: 'Dance, music, drama and other cultural events',
+      icon: Icons.music_note,
+      color: Colors.red.shade700,
+    );
 
     return Scaffold(
       body: CustomScrollView(
@@ -120,7 +100,7 @@ class HomePage extends StatelessWidget {
                       ),
                       SizedBox(height: standardPadding / 4),
                       Text(
-                        'Explore events and register now!',
+                        'Explore cultural events and register now!',
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.9),
                           fontSize: isTablet ? 16 : 14,
@@ -140,7 +120,7 @@ class HomePage extends StatelessWidget {
             ),
           ),
 
-          // Section title
+          // Section title - updated for cultural focus
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.all(standardPadding),
@@ -148,7 +128,7 @@ class HomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Event Categories',
+                    'Cultural Events',
                     style: TextStyle(
                       fontSize: isTablet ? 22 : 18,
                       fontWeight: FontWeight.bold,
@@ -159,21 +139,77 @@ class HomePage extends StatelessWidget {
             ),
           ),
 
-          // Category grid
-          SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: standardPadding),
-            sliver: SliverGrid(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: isTablet ? 3 : 2,
-                crossAxisSpacing: standardPadding,
-                mainAxisSpacing: standardPadding,
-                childAspectRatio: isTablet ? 1.2 : 1.05,
+          // Single category - centered to look good
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: standardPadding * 2,
+                vertical: standardPadding,
               ),
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                  return CategoryCard(category: categories[index]);
-                },
-                childCount: categories.length,
+              child: Center(
+                child: SizedBox(
+                  width: isTablet ? screenSize.width * 0.5 : screenSize.width * 0.7,
+                  child: AspectRatio(
+                    aspectRatio: 1.2,
+                    child: CategoryCard(category: culturalCategory),
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // Optional: Additional content to fill space
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.all(standardPadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: standardPadding),
+                  Text(
+                    'Upcoming Cultural Highlights',
+                    style: TextStyle(
+                      fontSize: isTablet ? 20 : 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: standardPadding / 2),
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(standardPadding),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'The Cultural Category features exciting events including:',
+                            style: TextStyle(
+                              fontSize: isTablet ? 16 : 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: standardPadding / 2),
+                          _buildHighlightItem(Icons.music_note, 'Dance competitions', colorScheme),
+                          _buildHighlightItem(Icons.theater_comedy, 'Drama performances', colorScheme),
+                          _buildHighlightItem(Icons.mic, 'Singing contests', colorScheme),
+                          _buildHighlightItem(Icons.palette, 'Cultural exhibitions', colorScheme),
+                          SizedBox(height: standardPadding / 2),
+                          Text(
+                            'Tap on the Cultural category card above to explore all events!',
+                            style: TextStyle(
+                              fontSize: isTablet ? 14 : 12,
+                              fontStyle: FontStyle.italic,
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -216,6 +252,23 @@ class HomePage extends StatelessWidget {
             );
           }
         },
+      ),
+    );
+  }
+
+  // Helper method to build highlight items
+  Widget _buildHighlightItem(IconData icon, String text, ColorScheme colorScheme) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: Colors.red.shade700),
+          const SizedBox(width: 8),
+          Text(
+            text,
+            style: TextStyle(fontSize: 14),
+          ),
+        ],
       ),
     );
   }
